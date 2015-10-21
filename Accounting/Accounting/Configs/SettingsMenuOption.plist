@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SettingsMenuOptionDisplayNames</key>
+	<array>
+		<string>钱包名</string>
+		<string>收入类目</string>
+		<string>支出类目</string>
+		<string>钱包余额</string>
+	</array>
+    <key>SettingsFunctionalOptionDisplayNames</key>
+    <array>
+        <string>清空数据</string>
+    </array>
+</dict>
+</plist>
