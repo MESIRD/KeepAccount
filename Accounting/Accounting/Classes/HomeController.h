@@ -7,8 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RecentRecordTableView.h"
 
 @interface HomeController : UIViewController
-@property (strong, nonatomic) IBOutlet UITableView *recentRecordTV;
+@property (strong, nonatomic) IBOutlet RecentRecordTableView *recentRecordTV;
+@property (strong, nonatomic) IBOutlet UIView *showEmptyView;
+@property (strong, nonatomic) IBOutlet UIVisualEffectView *blurEffectView;
+
+
+- (void)showNewRecordOptions;
 
 @end

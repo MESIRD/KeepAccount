@@ -7,9 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Record.h"
+#import "Constants.h"
 
 @interface HomeAccountingService : NSObject
 
-- (NSArray *)fetchRecentRecordFromLocal;
+- (NSArray *)fetchRecentRecordsFromLocal;
 
+- (BOOL)createNewRecord:(Record *)record;
+
+- (NSArray *)getCategory:(BudgetType)type;
+
+- (NSInteger)getCurrentPocketBalanceWithPocketId:(NSInteger)pocketId;
+- (NSInteger)getCurrentMonthIncomeWithPocketId:(NSInteger)pocketId;
+- (NSInteger)getCurrentMonthExpenditureWithPocketId:(NSInteger)pocketId;
 @end

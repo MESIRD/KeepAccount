@@ -11,6 +11,10 @@
 @interface NumberUtil : NSObject
 
 + (NumberUtil *)sharedNumberUtil;
-+ (NSString *)centToYuan:(NSInteger)cent;
 
++ (NSString *)centToYuan:(NSInteger)cent;
++ (NSInteger)yuanToCent:(NSString *)yuan;
+
++ (BOOL)isZero:(NSString *)amount;
++ (BOOL)isNumber:(NSString *)amount;
 @end

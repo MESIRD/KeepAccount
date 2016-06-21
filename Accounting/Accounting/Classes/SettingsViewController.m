@@ -9,10 +9,9 @@
 #import "SettingsViewController.h"
 #import "UserDefaultsService.h"
 #import "Constants.h"
+#import "FontUtil.h"
 
 @interface SettingsViewController ()
-
-@property (strong, nonatomic) UIBarButtonItem *backButtonItem;
 
 @end
 
@@ -21,32 +20,35 @@
 static SettingsViewController *sharedSettingsViewController;
 
 + (SettingsViewController *)sharedSettingsViewController {
-    if ( !sharedSettingsViewController) {
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Settings" bundle:[NSBundle mainBundle]];
         sharedSettingsViewController = [sb instantiateViewControllerWithIdentifier:@"Settings"];
         sharedSettingsViewController.title = @"设置";
+        [sharedSettingsViewController.navigationController.navigationBar setTitleTextAttributes:@{NSFontAttributeName:[FontUtil defaultFontWithSize:22]}];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changePocketName) name:kUpdatePocketName object:nil];
         
-        NSString *pocketName = [[UserDefaultsService sharedUserDefaultsService] getPocketName];
-        sharedSettingsViewController.backButtonItem = [[UIBarButtonItem alloc] initWithTitle:pocketName style:UIBarButtonItemStyleDone target:self action:@selector(dismissSelf)];
-        sharedSettingsViewController.backButtonItem.tintColor = [UIColor whiteColor];
-        sharedSettingsViewController.navigationItem.leftBarButtonItem = sharedSettingsViewController.backButtonItem;
-    }
+        UIView *backButtonView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+        UIButton *backTitleButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+        [backTitleButton addTarget:self action:@selector(dismissSelf) forControlEvents:UIControlEventTouchUpInside];
+        UILabel *backButtonLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+        backButtonLabel.text = [NSString stringWithFormat:@"<%@", [[UserDefaultsService sharedUserDefaultsService] getPocketName]];
+        backButtonLabel.font = [FontUtil defaultFontWithSize:20];
+        backButtonLabel.textColor = [UIColor whiteColor];
+        [backButtonView addSubview:backButtonLabel];
+        [backButtonView addSubview:backTitleButton];
+        UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButtonView];
+        sharedSettingsViewController.navigationItem.leftBarButtonItem = backButtonItem;
+        
+    });
     return sharedSettingsViewController;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    NSString *pocketName = [[UserDefaultsService sharedUserDefaultsService] getPocketName];
-    sharedSettingsViewController.backButtonItem.possibleTitles = [NSSet setWithObject:pocketName];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -60,11 +62,20 @@ static SettingsViewController *sharedSettingsViewController;
 
 + (void)changePocketName {
     
-    NSString *pocketName = [[UserDefaultsService sharedUserDefaultsService] getPocketName];
-    sharedSettingsViewController.backButtonItem = [[UIBarButtonItem alloc] initWithTitle:pocketName style:UIBarButtonItemStyleDone target:self action:@selector(dismissSelf)];
-    sharedSettingsViewController.backButtonItem.tintColor = [UIColor whiteColor];
-    sharedSettingsViewController.navigationItem.leftBarButtonItem = sharedSettingsViewController.backButtonItem;
+    UIView *backButtonView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+    UIButton *backTitleButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+    [backTitleButton addTarget:self action:@selector(dismissSelf) forControlEvents:UIControlEventTouchUpInside];
+    UILabel *backButtonLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 120, 30)];
+    backButtonLabel.text = [NSString stringWithFormat:@"<%@", [[UserDefaultsService sharedUserDefaultsService] getPocketName]];
+    backButtonLabel.font = [FontUtil defaultFontWithSize:20];
+    backButtonLabel.textColor = [UIColor whiteColor];
+    [backButtonView addSubview:backButtonLabel];
+    [backButtonView addSubview:backTitleButton];
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithCustomView:backButtonView];
+    sharedSettingsViewController.navigationItem.leftBarButtonItem = backButtonItem;
 }
+
+
 
 /*
 #pragma mark - Navigation

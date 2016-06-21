@@ -7,9 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Constants.h"
 
+@class AccountCategory;
 @interface SettingsService : NSObject
 
 - (void)clearUserData;
+
+- (NSInteger)countCategory:(BudgetType)type;
+- (NSArray *)getCategories:(BudgetType)type;
+- (BOOL)createCategory:(AccountCategory *)category;
+- (BOOL)deleteCategories:(NSArray *)categoryIds;
+- (BOOL)updateCategory:(AccountCategory *)category;
 
 @end

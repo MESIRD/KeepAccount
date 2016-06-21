@@ -7,11 +7,11 @@
 		<string>钱包名</string>
 		<string>收入类目</string>
 		<string>支出类目</string>
-		<string>钱包余额</string>
+		<string>收支图表</string>
 	</array>
-    <key>SettingsFunctionalOptionDisplayNames</key>
-    <array>
-        <string>清空数据</string>
-    </array>
+	<key>SettingsFunctionalOptionDisplayNames</key>
+	<array>
+		<string>清空数据</string>
+	</array>
 </dict>
 </plist>

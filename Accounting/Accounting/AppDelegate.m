@@ -8,6 +8,9 @@
 
 #import "AppDelegate.h"
 #import "TalkingData.h"
+#import "UserDefaultsService.h"
+#import "DBService.h"
+#import "URLUtil.h"
 
 @interface AppDelegate ()
 
@@ -24,6 +27,16 @@ NSString *talkingDataAppId = @"3BD513E38E7CF056BD207A2AC74E9598";
     [TalkingData sessionStarted:talkingDataAppId withChannelId:@"开发测试"];
     
     
+    //fisrt launch application
+    if ( [[UserDefaultsService sharedUserDefaultsService] getFirstLaunchingApplication]) {
+        //create db and tables
+        [self initializeApplicationDatabase];
+        
+        //set default pocket name
+        [[UserDefaultsService sharedUserDefaultsService] setPocketName:@"钱包名称"];
+        
+        [[UserDefaultsService sharedUserDefaultsService] setFirstLaunchingApplication:NO];
+    }
     return YES;
 }
 
@@ -47,6 +60,31 @@ NSString *talkingDataAppId = @"3BD513E38E7CF056BD207A2AC74E9598";
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    
+    //close database connection
+    FMDatabase *db = [DBService sharedDB];
+    if ( db) {
+        [db close];
+    }
+}
+
+#pragma -mark additional
+- (void)initializeApplicationDatabase {
+    
+    //create application tables
+    [DBService createApplicationTables];
+    
+    //insert initial data
+    [DBService insertInitialData];
+    
+    //create dir
+    [self createDirectory];
+}
+
+- (void)createDirectory {
+
+    //create image dir
+    [[NSFileManager defaultManager] createDirectoryAtPath:[URLUtil getCompleteImagePath] withIntermediateDirectories:YES attributes:nil error:nil];
 }
 
 @end

@@ -7,39 +7,75 @@
 //
 
 #import "OverviewView.h"
+#import "HomeAccountingService.h"
+#import "NumberUtil.h"
+#import "UserDefaultsService.h"
+#import "FontUtil.h"
+
+@interface OverviewView()
+
+@property (nonatomic, strong)   HomeAccountingService *homeAccountingService;
+
+@end
 
 @implementation OverviewView
 
-- (instancetype)init {
-    self = [super init];
-    if ( self) {
-        self.totalBalanceView.layer.cornerRadius = 5.0;
-        self.totalBalanceView.layer.masksToBounds = YES;
-        self.curMonthExpenditureLabel.text = @"2608.00";
-        self.curMonthIncomeLabel.text = @"5900.00";
-        self.balanceLabel.text = @"11111.00";
+- (HomeAccountingService *)homeAccountingService {
+    if ( !_homeAccountingService) {
+        _homeAccountingService = [[HomeAccountingService alloc] init];
     }
-    return self;
+    return _homeAccountingService;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if ( self) {
-        self.totalBalanceView.layer.cornerRadius = 5.0;
-        self.totalBalanceView.layer.masksToBounds = YES;
-        self.curMonthExpenditureLabel.text = @"2608.00";
-        self.curMonthIncomeLabel.text = @"5900.00";
-        self.balanceLabel.text = @"11111.00";
+        
     }
     return self;
 }
 
 - (void)awakeFromNib {
-    self.totalBalanceView.layer.cornerRadius = 8.0;
+    //some initialization here
+    
+    //data initialization
+    [self setData];
+    
+    //register notification
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresData) name:kRefreshHomeTableData object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refresData) name:kClearUserAccountFlows object:nil];
+    
+}
+
+- (void)layoutSubviews {
+    
+    self.totalBalanceView.layer.cornerRadius = 5.0;
     self.totalBalanceView.layer.masksToBounds = YES;
-    self.curMonthExpenditureLabel.text = @"2608.00";
-    self.curMonthIncomeLabel.text = @"5900.00";
-    self.balanceLabel.text = @"11111.00";
+    
+    _curMonthIncomeLabel.font = [FontUtil numberFontWithSize:16];
+    _curMonthExpenditureLabel.font = [FontUtil numberFontWithSize:16];
+    _balanceLabel.font = [FontUtil defaultFontWithSize:30];
+    _moneySign.font = [FontUtil defaultFontWithSize:34];
+    _curMonthIncomeSign.font = [FontUtil defaultFontWithSize:15];
+    _curMonthExpenditureSign.font = [FontUtil defaultFontWithSize:15];
+    _balanceSign.font = [FontUtil defaultFontWithSize:30];
+}
+
+- (void)refresData {
+    [self setData];
+}
+
+- (void)setData {
+    
+    NSInteger pocketId = [[UserDefaultsService sharedUserDefaultsService] getPocketId];
+    
+    NSInteger pocketBalance = [self.homeAccountingService getCurrentPocketBalanceWithPocketId:pocketId];
+    NSInteger curMonthIncome = [self.homeAccountingService getCurrentMonthIncomeWithPocketId:pocketId];
+    NSInteger curMonthExpenditure = [self.homeAccountingService getCurrentMonthExpenditureWithPocketId:pocketId];
+    
+    self.curMonthExpenditureLabel.text = [NumberUtil centToYuan:curMonthExpenditure];
+    self.curMonthIncomeLabel.text = [NumberUtil centToYuan:curMonthIncome];
+    self.balanceLabel.text = [NumberUtil centToYuan:pocketBalance];
 }
 
 

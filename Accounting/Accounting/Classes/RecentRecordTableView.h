@@ -10,4 +10,8 @@
 
 @interface RecentRecordTableView : UITableView <UITableViewDataSource, UITableViewDelegate>
 
+- (void)setViewNestedViewController:(UIViewController *)vc;
+
+- (NSInteger)getRecordCount;
+
 @end

@@ -12,7 +12,9 @@
 #import "SettingsService.h"
 #import "SettingsFunctionalTableViewCell.h"
 #import "SettingsViewController.h"
+#import "CategoryViewController.h"
 #import "Constants.h"
+#import "SVProgressHUD.h"
 
 @interface SettingsTableView()
 
@@ -51,16 +53,17 @@ static NSString *functionDisplayNames       = @"SettingsFunctionalOptionDisplayN
         self.tableFooterView = [[UIView alloc] init];       //hide superfluous cells
         self.scrollEnabled   = NO;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changePocketName) name:kUpdatePocketName object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshTableData) name:kUpdatePocketName object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshTableData) name:kCategoryCollectionDeleted object:nil];
     }
     return self;
 }
 
-- (void)changePocketName {
+- (void)refreshTableData {
     [self reloadData];
 }
 
-//table view delegate
+#pragma -mark table view delegate
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [self.settingsOptions[section] count];
@@ -68,6 +71,19 @@ static NSString *functionDisplayNames       = @"SettingsFunctionalOptionDisplayN
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return [self.settingsOptions count];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 50;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerView = [tableView headerViewForSection:section];
+    if ( headerView == nil) {
+        headerView = [[UIView alloc] init];
+    }
+    [headerView setBackgroundColor:[UIColor clearColor]];
+    return headerView;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -85,14 +101,13 @@ static NSString *functionDisplayNames       = @"SettingsFunctionalOptionDisplayN
             cell.detailTextLabel.text = pocketName;
         } else if ( indexPath.row == 1) {
             //income category
-            //todo
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)[self.settingsService countCategory:BudgetTypeIncome]];
         } else if ( indexPath.row == 2) {
             //expenditure category
-            //todo
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%ld", (long)[self.settingsService countCategory:BudgetTypeExpenditure]];
         } else if ( indexPath.row == 3) {
-            //pocket balance
-            NSInteger pocketBalance = [[UserDefaultsService sharedUserDefaultsService] getPocketBalance];
-            cell.detailTextLabel.text = [NumberUtil centToYuan:pocketBalance];
+            //Income Expenditure Charts
+            cell.detailTextLabel.text = @"";
         }
         return cell;
     } else if ( indexPath.section == 1) {
@@ -120,13 +135,23 @@ static NSString *functionDisplayNames       = @"SettingsFunctionalOptionDisplayN
             [[SettingsViewController sharedSettingsViewController].navigationController pushViewController:vc animated:YES];
         } else if ( indexPath.row == 1) {
             //income category
-            //todo
+            CGRect frame = self.frame;
+            frame.size.height -= [SettingsViewController sharedSettingsViewController].navigationController.navigationBar.frame.size.height;
+            frame.size.height -= [[UIApplication sharedApplication] statusBarFrame].size.height;
+            
+            CategoryViewController *vc = [[CategoryViewController alloc] initWithBudgetType:BudgetTypeIncome andFrame:frame];
+            [[SettingsViewController sharedSettingsViewController].navigationController pushViewController:vc animated:YES];
         } else if ( indexPath.row == 2) {
             //expenditure category
-            //todo
+            CGRect frame = self.frame;
+            frame.size.height -= [SettingsViewController sharedSettingsViewController].navigationController.navigationBar.frame.size.height;
+            frame.size.height -= [[UIApplication sharedApplication] statusBarFrame].size.height;
+            
+            CategoryViewController *vc = [[CategoryViewController alloc] initWithBudgetType:BudgetTypeExpenditure andFrame:frame];
+            [[SettingsViewController sharedSettingsViewController].navigationController pushViewController:vc animated:YES];
         } else if ( indexPath.row == 3) {
-            //pocket balance
-            //todo
+            //Income Expenditure Charts
+            //do nothing
         }
     } else if ( indexPath.section == 1) {
         //functional options
@@ -138,7 +163,9 @@ static NSString *functionDisplayNames       = @"SettingsFunctionalOptionDisplayN
             UIAlertAction *cancelAction  = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
             UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 [self.settingsService clearUserData];
-                NSLog(@"data is cleared!");
+                [[NSNotificationCenter defaultCenter] postNotificationName:kClearUserAccountFlows object:nil];
+                [SVProgressHUD showSuccessWithStatus:@"数据清空成功!"];
+                [[SettingsViewController sharedSettingsViewController] dismissViewControllerAnimated:YES completion:nil];
             }];
             [alertController addAction:cancelAction];
             [alertController addAction:confirmAction];

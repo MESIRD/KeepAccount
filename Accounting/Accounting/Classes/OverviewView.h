@@ -13,6 +13,10 @@
 @property (strong, nonatomic) IBOutlet UILabel *curMonthIncomeLabel;
 @property (strong, nonatomic) IBOutlet UILabel *curMonthExpenditureLabel;
 @property (strong, nonatomic) IBOutlet UILabel *balanceLabel;
-@property (strong, nonatomic) IBOutlet UIView *totalBalanceView;
+@property (strong, nonatomic) IBOutlet UILabel *curMonthIncomeSign;
+@property (strong, nonatomic) IBOutlet UILabel *curMonthExpenditureSign;
+@property (strong, nonatomic) IBOutlet UILabel *moneySign;
+@property (strong, nonatomic) IBOutlet UILabel *balanceSign;
+@property (strong, nonatomic) IBOutlet UIView  *totalBalanceView;
 
 @end

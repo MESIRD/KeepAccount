@@ -3,3 +3,6 @@ pod 'FMDB', '~> 2.5'
 # pod 'FMDB/standalone'   # FMDB with latest SQLite amalgamation source
 # pod 'FMDB/standalone/FTS'   # FMDB with latest SQLite amalgamation source and FTS
 # pod 'FMDB/SQLCipher'   # FMDB with SQLCipher
+
+pod 'SVProgressHUD', '~> 1.1.3'
+pod 'MJRefresh', '~> 2.4.12'

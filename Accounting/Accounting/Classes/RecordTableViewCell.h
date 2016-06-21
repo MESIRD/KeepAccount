@@ -10,11 +10,11 @@
 
 @interface RecordTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet UILabel  *amountLabel;
-@property (strong, nonatomic) IBOutlet UILabel  *categoryLabel;
-@property (strong, nonatomic) IBOutlet UIView   *categoryView;
-
-@property (nonatomic) NSInteger amount;
-@property (strong, nonatomic) NSString  *category;
+@property (strong, nonatomic) IBOutlet UILabel      *amountLabel;
+@property (strong, nonatomic) IBOutlet UILabel      *categoryLabel;
+@property (strong, nonatomic) IBOutlet UILabel      *moneySign;
+@property (strong, nonatomic) IBOutlet UILabel      *recordDescription;
+@property (strong, nonatomic) IBOutlet UILabel      *recordDateTime;
+@property (strong, nonatomic) IBOutlet UIImageView  *divideLine;
 
 @end

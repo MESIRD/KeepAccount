@@ -15,7 +15,13 @@
 - (void)setPocketName:(NSString *)pocketName;
 - (NSString *)getPocketName;
 
+- (void)setPocketId:(NSInteger)pocketId;
+- (NSInteger)getPocketId;
+
 - (void)setPocketBalance:(NSInteger)balance;
 - (NSInteger)getPocketBalance;
+
+- (void)setFirstLaunchingApplication:(BOOL)isFirstLaunchingApplication;
+- (BOOL)getFirstLaunchingApplication;
 
 @end

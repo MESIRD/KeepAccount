@@ -15,16 +15,8 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if ( self) {
-        //configure appearance
-        self.inputView.layer.cornerRadius = 8.0f;
-        self.inputView.layer.masksToBounds = YES;
-        self.inputView.layer.borderWidth = 1.0f;
-        self.inputView.layer.borderColor = [UIColor whiteColor].CGColor;
-        
         //set title
         self.title = @"钱包名";
-        
-        
         
         //create done button
         UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"完成" style:UIBarButtonItemStyleDone target:self action:@selector(updatePocketName)];
@@ -35,10 +27,6 @@
 }
 
 - (void)awakeFromNib {
-    self.inputView.layer.cornerRadius = 8.0f;
-    self.inputView.layer.masksToBounds = YES;
-    self.inputView.layer.borderWidth = 2.0f;
-    self.inputView.layer.borderColor = [UIColor whiteColor].CGColor;
     
 }
 
@@ -47,6 +35,12 @@
     
     //set default value of pocket name
     self.pocketNameLabel.text = [[UserDefaultsService sharedUserDefaultsService] getPocketName];
+    
+    //configure appearance
+    self.inputView.layer.cornerRadius = 5.0f;
+    self.inputView.layer.masksToBounds = YES;
+    self.inputView.layer.borderWidth = 1.0f;
+    self.inputView.layer.borderColor = [UIColor whiteColor].CGColor;
 }
 
 - (void)updatePocketName {
